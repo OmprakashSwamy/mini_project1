@@ -1,0 +1,84 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>GK Quiz Portal</title><meta name="description" content="Online general knowledge quiz portal. BCA mini project by Omprakash Swamy.">
+<style>
+:root{color-scheme:light;--bg:#edf3f5;--card:#fff;--tx:#12262e;--mu:#52666e;--ac:#0f766e;--ac2:#d9f0ed;--ok:#15803d;--bad:#b91c1c;--bd:#cddbe0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0e1a1f;--card:#16262d;--tx:#e6f0f2;--mu:#9bb1b8;--ac:#2dd4bf;--ac2:#1b3a3e;--ok:#4ade80;--bad:#f87171;--bd:#2a4048}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0e1a1f;--card:#16262d;--tx:#e6f0f2;--mu:#9bb1b8;--ac:#2dd4bf;--ac2:#1b3a3e;--ok:#4ade80;--bad:#f87171;--bd:#2a4048}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:env(safe-area-inset-top,0px);z-index:2}
+main{max-width:760px;margin:0 auto;padding:16px}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:18px;margin-bottom:14px}.narrow{max-width:420px;margin:28px auto}
+h1,h2,h3{margin:.2em 0 .5em;font-family:Georgia,"Times New Roman",serif}h2{line-height:1.3}
+.mu{color:var(--mu)}.sm{font-size:.85rem}.bad{color:var(--bad);min-height:1.4em}
+label{display:block;margin:10px 0;font-size:.9rem;color:var(--mu)}
+input,select{display:block;width:100%;margin-top:4px;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--bd);padding:9px 16px;background:var(--card);color:var(--tx)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+button.p{background:var(--ac);border-color:var(--ac);color:#fff}:root[data-theme="dark"] button.p{color:#06201d}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.p{color:#06201d}}
+button.s{padding:5px 12px;font-size:.85rem}button:disabled{opacity:.4;cursor:default}
+.o{display:block;width:100%;text-align:left;margin:8px 0;padding:12px}.o.sel{border:2px solid var(--ac);background:var(--ac2);font-weight:600}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px}.qi{border-top:1px solid var(--bd);padding:8px 0;margin:0}
+.bar{height:6px;background:var(--ac2);border-radius:4px;margin:10px 0}.bar i{display:block;height:100%;background:var(--ac);border-radius:4px}
+.tabs{display:flex;gap:8px;margin:12px 0}.tabs .on{background:var(--ac2);border-color:var(--ac);font-weight:600}
+.sc{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--bd)}
+.okc{border-left:5px solid var(--ok)}.badc{border-left:5px solid var(--bad)}
+footer{max-width:760px;margin:0 auto;padding:8px 16px 24px;text-align:center;color:var(--mu);font-size:.85rem}
+</style></head><body>
+<header><b>GK Quiz Portal</b><span id="who"></span></header><main id="app"></main><footer>GK Quiz Portal | BCA Mini Project by Omprakash Swamy, BCA 3rd Year</footer>
+<script>
+const $=s=>document.querySelector(s),mem={};
+const ls={get(k,d){if(k in mem)return mem[k];try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+const hash=async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+const msg=t=>{const e=$('#err');if(e)e.textContent=t};
+const SEED=[["What is the capital of Australia?",["Sydney","Canberra","Melbourne","Perth"],1],["Which planet is known as the Red Planet?",["Venus","Jupiter","Mars","Mercury"],2],["Who wrote 'Romeo and Juliet'?",["Charles Dickens","William Shakespeare","Jane Austen","Mark Twain"],1],["Which is the largest ocean on Earth?",["Atlantic","Indian","Arctic","Pacific"],3],["What is the chemical symbol for gold?",["Ag","Au","Gd","Go"],1],["Who was the first Prime Minister of India?",["Jawaharlal Nehru","Sardar Patel","Lal Bahadur Shastri","Indira Gandhi"],0],["What is the currency of Japan?",["Won","Yuan","Yen","Ringgit"],2],["What is the hardest natural substance?",["Quartz","Diamond","Steel","Granite"],1],["Which is the largest mammal?",["African elephant","Giraffe","Blue whale","Great white shark"],2],["How many continents are there?",["5","6","7","8"],2],["Who painted the Mona Lisa?",["Vincent van Gogh","Pablo Picasso","Michelangelo","Leonardo da Vinci"],3],["The river Ganga flows into which body of water?",["Arabian Sea","Bay of Bengal","Indian Ocean","Gulf of Mannar"],1],["What is the national animal of India?",["Lion","Elephant","Tiger","Leopard"],2],["Which gas do plants absorb for photosynthesis?",["Oxygen","Nitrogen","Carbon dioxide","Hydrogen"],2],["In which year did India gain independence?",["1945","1947","1950","1952"],1],["Which is the highest mountain above sea level?",["K2","Kangchenjunga","Mount Everest","Mont Blanc"],2],["Which is the smallest country in the world by area?",["Monaco","Vatican City","San Marino","Malta"],1],["Who formulated the law of universal gravitation?",["Albert Einstein","Galileo Galilei","Isaac Newton","Nikola Tesla"],2],["What is the capital of Canada?",["Toronto","Ottawa","Vancouver","Montreal"],1],["Which planet has the most prominent rings?",["Saturn","Mars","Earth","Neptune"],0],["Who wrote the Indian national anthem?",["Bankim Chandra Chatterjee","Rabindranath Tagore","Sarojini Naidu","Subramania Bharati"],1],["In which city is the Taj Mahal located?",["Delhi","Jaipur","Agra","Lucknow"],2],["Which is the largest hot desert in the world?",["Gobi","Sahara","Kalahari","Thar"],1],["Which country won the FIFA World Cup in 2022?",["France","Brazil","Germany","Argentina"],3],["Who was the first person to walk on the Moon?",["Buzz Aldrin","Yuri Gagarin","Neil Armstrong","Michael Collins"],2]];
+const N=10,SECS=600;
+let users,qs,rs,me,last,quiz,timer,view='auth',mode='login';
+function go(v){view=v;render()}
+const vAuth=()=>`<div class="c narrow"><h1>GK Quiz Portal</h1><p class="mu">Sign in to test your general knowledge.</p>
+<div class="tabs"><button class="${mode=='login'?'on':''}" onclick="mode='login';render()">Log in</button><button class="${mode=='reg'?'on':''}" onclick="mode='reg';render()">Register</button></div>
+${mode=='reg'?'<label>Full name<input id="n"></label>':''}<label>Username<input id="u" autocomplete="username"></label><label>Password<input id="p" type="password"></label>
+<div id="err" class="bad" role="alert"></div><button class="p" onclick="${mode=='reg'?'reg()':'login()'}">${mode=='reg'?'Create account':'Log in'}</button>
+<p class="mu sm">Admin demo login: admin / admin123</p></div>`;
+async function reg(){const n=$('#n').value.trim(),u=$('#u').value.trim().toLowerCase(),p=$('#p').value;
+ if(!n||u.length<3||p.length<6)return msg('Enter your name, a username (3+ characters) and a password (6+ characters).');
+ if(users.some(x=>x.u===u))return msg('That username is taken. Try another.');
+ users.push({n,u,p:await hash(p)});ls.set('u',users);enter(users[users.length-1])}
+async function login(){const u=$('#u').value.trim().toLowerCase(),p=await hash($('#p').value),x=users.find(x=>x.u===u&&x.p===p);
+ if(!x)return msg('Wrong username or password.');enter(x)}
+function enter(x){me=x;ls.set('s',x.u);go(x.a?'admin':'home')}
+function out(){clearInterval(timer);me=null;ls.set('s','');go('auth')}
+const tbl=(h,r)=>r.length?`<div class="sc"><table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${r.map(x=>`<tr>${x.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table></div>`:'<p class="mu">No attempts yet. Be the first.</p>';
+function board(){const b={};rs.forEach(r=>{if(!b[r.u]||r.sc/r.tot>b[r.u].p)b[r.u]={n:r.n,p:r.sc/r.tot,sc:r.sc,tot:r.tot}});
+ return tbl(['Rank','Name','Best score'],Object.values(b).sort((x,y)=>y.p-x.p).slice(0,5).map((x,i)=>[i+1,esc(x.n),`${x.sc}/${x.tot}`]))}
+function vHome(){const mine=rs.filter(r=>r.u===me.u).reverse();
+ return `<div class="c"><h2>Hello, ${esc(me.n)}</h2><p>${N} random questions, ${SECS/60} minutes, 1 mark each. The bank has ${qs.length} questions.</p>${qs.length>=N?'<button class="p" onclick="start()">Start quiz</button>':'<p class="bad">The bank needs at least '+N+' questions. Ask the admin to add more.</p>'}</div>
+<div class="c"><h3>Your attempts</h3>${tbl(['Date','Score'],mine.map(r=>[r.d,`${r.sc}/${r.tot}`]))}</div><div class="c"><h3>Leaderboard</h3>${board()}</div>`}
+function start(){const l=[...qs].sort(()=>Math.random()-.5).slice(0,N);quiz={l,a:l.map(()=>-1),i:0,end:Date.now()+SECS*1000};clearInterval(timer);timer=setInterval(tick,1000);go('quiz')}
+function tick(){if(!quiz||view!=='quiz')return;const s=Math.max(0,Math.round((quiz.end-Date.now())/1000)),e=$('#tm');if(e)e.textContent='Time left '+fmt(s);if(!s)submit()}
+const pick=j=>{quiz.a[quiz.i]=j;render()},nav=d=>{quiz.i=Math.min(quiz.l.length-1,Math.max(0,quiz.i+d));render()};
+function submit(){clearInterval(timer);const sc=quiz.l.reduce((s,q,i)=>s+(quiz.a[i]===q.a),0);
+ last={u:me.u,n:me.n,sc,tot:quiz.l.length,d:new Date().toLocaleString(),rv:quiz.l.map((q,i)=>({q:q.q,o:q.o,a:q.a,y:quiz.a[i]}))};
+ const{rv,...r}=last;rs.push(r);ls.set('r',rs);go('result')}
+function vQuiz(){const q=quiz.l[quiz.i],n=quiz.l.length,done=quiz.a.filter(x=>x>=0).length;
+ return `<div class="c"><div class="row" style="margin-top:0"><b>Question ${quiz.i+1} of ${n}</b><b id="tm"></b></div><div class="bar"><i style="width:${done/n*100}%"></i></div>
+<h2>${esc(q.q)}</h2>${q.o.map((o,j)=>`<button class="o ${quiz.a[quiz.i]===j?'sel':''}" onclick="pick(${j})">${'ABCD'[j]}. ${esc(o)}</button>`).join('')}
+<div class="row"><button onclick="nav(-1)" ${quiz.i?'':'disabled'}>Previous</button>${quiz.i<n-1?'<button class="p" onclick="nav(1)">Next</button>':`<button class="p" onclick="submit()">Submit (${done} of ${n} answered)</button>`}</div></div>`}
+function vResult(){const r=last,p=Math.round(r.sc/r.tot*100);
+ return `<div class="c"><h2>You scored ${r.sc} out of ${r.tot} (${p}%)</h2><p>${p>=80?'Excellent work.':p>=50?'Good effort. Another round will lift your score.':'Keep practising and try again.'}</p><button class="p" onclick="go('home')">Back to home</button></div>
+${r.rv.map((x,i)=>`<div class="c ${x.y===x.a?'okc':'badc'}"><b>${i+1}. ${esc(x.q)}</b><p>${x.y===x.a?'Correct.':'Incorrect.'} Your answer: ${x.y<0?'not answered':esc(x.o[x.y])}<br>Correct answer: ${esc(x.o[x.a])}</p></div>`).join('')}`}
+function vAdmin(){return `<div class="c"><h2>Admin panel</h2><p class="mu">${users.length-1} students, ${rs.length} attempts, ${qs.length} questions.</p></div>
+<div class="c"><h3>Add a question</h3><label>Question<input id="aq"></label>${[0,1,2,3].map(i=>`<label>Option ${'ABCD'[i]}<input id="o${i}"></label>`).join('')}<label>Correct option<select id="ac">${[0,1,2,3].map(i=>`<option value="${i}">${'ABCD'[i]}</option>`).join('')}</select></label><div id="err" class="bad" role="alert"></div><button class="p" onclick="addQ()">Add question</button></div>
+<div class="c"><h3>All attempts</h3>${tbl(['Student','Date','Score'],[...rs].reverse().map(r=>[esc(r.n),r.d,`${r.sc}/${r.tot}`]))}</div>
+<div class="c"><h3>Question bank</h3>${qs.map(q=>`<div class="row qi"><span>${esc(q.q)}</span><button class="s" onclick="delQ(${q.id})">Delete</button></div>`).join('')}</div>`}
+function addQ(){const q=$('#aq').value.trim(),o=[0,1,2,3].map(i=>$('#o'+i).value.trim());if(!q||o.some(x=>!x))return msg('Fill in the question and all four options.');
+ qs.push({id:Math.max(0,...qs.map(x=>x.id))+1,q,o,a:+$('#ac').value});ls.set('q',qs);render()}
+function delQ(id){qs=qs.filter(q=>q.id!==id);ls.set('q',qs);render()}
+function render(){if(!me&&view!=='auth')view='auth';$('#who').innerHTML=me?`${esc(me.n)} <button class="s" onclick="out()">Log out</button>`:'';
+ $('#app').innerHTML=({auth:vAuth,home:vHome,quiz:vQuiz,result:vResult,admin:vAdmin})[view]();tick()}
+(async()=>{users=ls.get('u',null);if(!users){users=[{n:'Administrator',u:'admin',p:await hash('admin123'),a:1}];ls.set('u',users)}
+ qs=ls.get('q',null);if(!qs){qs=SEED.map((s,i)=>({id:i+1,q:s[0],o:s[1],a:s[2]}));ls.set('q',qs)}
+ rs=ls.get('r',[]);me=users.find(x=>x.u===ls.get('s',''))||null;view=me?(me.a?'admin':'home'):'auth';render()})();
+</script></body></html>
